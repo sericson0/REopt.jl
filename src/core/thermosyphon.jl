@@ -29,4 +29,49 @@
 # *********************************************************************************
 """
     Thermosyphon
+struct with inner constructor:
+```julia
+function Thermosyphon(;
+    ground_temp_degF::Real=25,
+    effective_conductance_btu_per_degF::Real=141,
+    design_active_cooling_rate_kw::Real=0.197,
+    structure_heat_to_ground_mmbtu_per_year::Real=5.9
+)
+```
 """
+struct Thermosyphon <: AbstractTech
+    ground_temp_degF
+    effective_conductance_btu_per_degF
+    design_active_cooling_rate_kw
+    structure_heat_to_ground_mmbtu_per_year
+
+    function Thermosyphon(;
+        ground_temp_degF::Real=25,
+        effective_conductance_btu_per_degF::Real=141,
+        design_active_cooling_rate_kw::Real=0.197,
+        structure_heat_to_ground_mmbtu_per_year::Real=5.9,
+        )
+
+        # validate inputs
+        invalid_args = String[]
+        if !(0 <= effective_conductance_btu_per_degF)
+            push!(invalid_args, "effective_conductance_btu_per_degF must satisfy 0 <= effective_conductance_btu_per_degF, got $(effective_conductance_btu_per_degF)")
+        end
+        if !(0 <= design_active_cooling_rate_kw)
+            push!(invalid_args, "design_active_cooling_rate_kw must satisfy 0 <= design_active_cooling_rate_kw, got $(design_active_cooling_rate_kw)")
+        end
+        if !(0 <= structure_heat_to_ground_mmbtu_per_year)
+            push!(invalid_args, "structure_heat_to_ground_mmbtu_per_year must satisfy 0 <= structure_heat_to_ground_mmbtu_per_year, got $(structure_heat_to_ground_mmbtu_per_year)")
+        end
+        if length(invalid_args) > 0
+            error("Invalid argument values: $(invalid_args)")
+        end
+
+        new(
+            ground_temp_degF,
+            effective_conductance_btu_per_degF,
+            design_active_cooling_rate_kw,
+            structure_heat_to_ground_mmbtu_per_year
+        )
+    end
+end
